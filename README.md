@@ -128,60 +128,60 @@ Input sanitization: minskar XSS/payload i datafält.
 # Postman requests:
 
 ### Går att söka böcker på titel eller författare - öppen för alla
-![Get Books request](images/1.GETBooks.JPG)  
+![Get Books request](Images/1.GETBooks.JPG)  
 
 ### Se alla böcker - öppen för alla
-![Get Books2 request](images/2.GETBooks2.JPG)
+![Get Books2 request](Images/2.GETBooks2.JPG)
 
 ### Get allas lån 401 unauthorized - måste logga in
-![See Loan Ej Inloggad request](images/4.SeeLoanEjInloggad.JPG)  
+![See Loan Ej Inloggad request](Images/4.SeeLoanEjInloggad.JPG)  
 
 ### skapa användare - öppen för alla
-![Create User request](images/postmanCreateUserJPG.JPG)  
+![Create User request](Images/postmanCreateUserJPG.JPG)  
 
 ### Ogiltiga inloggningsuppgifter
-![Login Ogiltiga Uppgifter request](images/5.LoginOgilitigaUppgifter.JPG)  
+![Login Ogiltiga Uppgifter request](Images/5.LoginOgilitigaUppgifter.JPG)  
 
 ### Too many requests - kontot låses i 15 min efter 5 försök.
-![Too Many requests request](images/TooManyRequests.JPG)
+![Too Many requests request](Images/TooManyRequests.JPG)
 
 ### Logga in som User - 200 ok
-![Login User request](images/6.PostmanLogin.JPG)  
+![Login User request](Images/6.PostmanLogin.JPG)  
 
 ### Se egna lån som user - 200 ok
-![See my Loans as User request](images/7.PostmanSeeLoanAsUser.JPG)  
+![See my Loans as User request](Images/7.PostmanSeeLoanAsUser.JPG)  
 
 ### Se allas lån som user - obehörig - 403 forbidden 
-![See All Loans as USer request](images/7.UserForbiddenSeeAllLoans.JPG)  
+![See All Loans as USer request](Images/7.UserForbiddenSeeAllLoans.JPG)  
 
 ### Se alla lån som User -  
 Jag hade lite problem med att få rätt felkod, fick först 401 även som inloggad,  
 Löste det med exception handler i securityconfig
-![See all loans user fel http kod request](images/8.PostmanUserCannotSeeAllLoans.JPG)  
+![See all loans user fel http kod request](Images/8.PostmanUserCannotSeeAllLoans.JPG)  
 
 ### User kan inte se andra users uppgifter
-![User cannot see other users request](images/UserSeeUSerForbidden.JPG)  
+![User cannot see other users request](Images/UserSeeUSerForbidden.JPG)  
 
 ### Logout - 204 no content och token blacklistas
-![Logout request](images/10.PostmanLogoutSuccessful.JPG)
+![Logout request](Images/10.PostmanLogoutSuccessful.JPG)
 
 ### Admin kan se allas lån
-![Admin See all loans request](images/11.AdminSeeAllLoans.JPG)  
+![Admin See all loans request](Images/11.AdminSeeAllLoans.JPG)  
 
 ### Admin kan se users uppgifter
-![Admin see users request](images/12.PostmanAdminSeeUsers.JPG)  
+![Admin see users request](Images/12.PostmanAdminSeeUsers.JPG)  
 
 ### Admin kan skapa bok eller författare (users = obehörig)
-![Admin post book request](images/POSTBookSomAdmin.JPG)
+![Admin post book request](Images/POSTBookSomAdmin.JPG)
 
 ### Admin och user kan låna bok som inloggade
-![loan book request](images/PostmanLoanBookWithToken.JPG)
+![loan book request](Images/PostmanLoanBookWithToken.JPG)
 
 ### Säkra headers
-![säkra headers request](images/PostmanHSTSX-Frame-OptionsContentSecurityPolicy.JPG)  
+![säkra headers request](Images/PostmanHSTSX-Frame-OptionsContentSecurityPolicy.JPG)  
 
 ### Session 
-![session request](images/Sessiom.JPG)
+![session request](images/Session.JPG)
 
 
 
