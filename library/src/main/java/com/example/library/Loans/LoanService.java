@@ -1,9 +1,7 @@
 package com.example.library.Loans;
 
-
 import com.example.library.Books.Book;
 import com.example.library.Books.BookRepository;
-import com.example.library.DTOMapper;
 import com.example.library.User.User;
 import com.example.library.User.UserRepository;
 import org.springframework.stereotype.Service;
@@ -29,64 +27,70 @@ public class LoanService {
         return loanRepository.findByUserUserId(userId);
     }
 
+    public List<Loan> getAllLoans() {
+        return loanRepository.findAll();
+    }
+
     @Transactional
     public Loan loanBook(Long userId, Long bookId) {
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
-            Book book = bookRepository.findById(bookId)
-                    .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        var book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new RuntimeException("Book not found"));
 
         if (book.getAvailableCopies() <= 0) {
-            throw new IllegalStateException("Book is not available for loan");
+            throw new IllegalStateException("Book not available");
         }
 
-        // Minska tillgängliga exemplar
         book.setAvailableCopies(book.getAvailableCopies() - 1);
         bookRepository.save(book);
 
-
         Loan loan = new Loan();
-            loan.setUser(user);
-            loan.setBook(book);
-            loan.setLoanDate(LocalDate.now());
-            loan.setReturnDate(LocalDate.now().plusDays(14));
-            loan.setReturned(false);
+        loan.setUser(user);
+        loan.setBook(book);
+        loan.setLoanDate(LocalDate.now());
+        loan.setDueDate(LocalDate.now().plusDays(14));
+        loan.setReturned(false);
 
         return loanRepository.save(loan);
-
-
     }
 
+    @Transactional
     public Loan returnBook(Long loanId) {
         Loan loan = loanRepository.findById(loanId)
-                .orElseThrow(() -> new IllegalArgumentException("Loan not found"));
+                .orElseThrow(() -> new RuntimeException("Loan not found"));
 
         if (loan.isReturned()) {
             throw new IllegalStateException("Book already returned");
         }
 
         loan.setReturned(true);
-        loan.setReturnDate(LocalDate.now());
+//        loan.setDueDate(LocalDate.now());
 
-        //återställ exemplar
-        Book book = loan.getBook();
+        // 🔑 Hämta boken färskt från databasen
+        Book book = bookRepository.findById(loan.getBook().getBookId())
+                .orElseThrow(() -> new RuntimeException("Book not found"));
+
         book.setAvailableCopies(book.getAvailableCopies() + 1);
-        bookRepository.save(book);
+        bookRepository.saveAndFlush(book); // säkerställ att ändringen skrivs direkt
 
         return loanRepository.save(loan);
     }
 
+    @Transactional
     public Loan extendLoan(Long loanId) {
         Loan loan = loanRepository.findById(loanId)
-                .orElseThrow(() -> new IllegalArgumentException("Loan not found"));
+                .orElseThrow(() -> new RuntimeException("Loan not found"));
 
         if (loan.isReturned()) {
-            throw new IllegalStateException("Cannot extend a returned loan");
+            throw new IllegalStateException("Cannot extend returned loan");
         }
 
-        loan.setReturnDate(loan.getReturnDate().plusWeeks(1));
-
+        loan.setDueDate(loan.getDueDate().plusWeeks(1));
         return loanRepository.save(loan);
     }
+
+
 
 }

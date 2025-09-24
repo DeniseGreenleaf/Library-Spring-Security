@@ -1,7 +1,9 @@
 package com.example.library.Author;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,41 +18,35 @@ public class AuthorController {
         this.authorService = authorService;
     }
 
-    // GET /authors lista alla författare
+    // Lista alla författare
     @GetMapping
     public ResponseEntity<List<Author>> getAllAuthors() {
-
-        try {
-            return ResponseEntity.ok(authorService.getAllAuthors());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        List<Author> authors = authorService.getAllAuthors();
+        return ResponseEntity.ok(authors);
     }
 
-    // GET /authors med efternamn
+
+    // Hämta författare via efternamn
     @GetMapping("/name/{lastName}")
     public ResponseEntity<List<Author>> getAuthorsByLastName(@PathVariable String lastName) {
-
-        try {
-            return ResponseEntity.ok(authorService.findAuthorsByLastName(lastName));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        List<Author> authors = authorService.findAuthorsByLastName(lastName);
+        return ResponseEntity.ok(authors);
     }
 
-    // POST /authors  skapa ny författare
+    // Skapa ny författare
     @PostMapping
-    public ResponseEntity<Author> createAuthor(@RequestBody Author author) {
-        try {
-            Author createdAuthor = authorService.createAuthor(author);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdAuthor);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Author> createAuthor(@Valid @RequestBody Author author) {
+        Author created = authorService.createAuthor(author);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
+
+    // Hämta författare via ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Author> getAuthorById(@PathVariable Long id) {
+        Author author = authorService.getAuthorById(id);
+        return ResponseEntity.ok(author);
+    }
+
 
 }

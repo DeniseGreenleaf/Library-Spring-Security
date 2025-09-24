@@ -8,8 +8,11 @@ import com.example.library.Author.AuthorRepository;
 import com.example.library.BookWithDetailsDTO;
 import com.example.library.DTOMapper;
 import jakarta.annotation.PostConstruct;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +27,7 @@ public class BookService {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
     }
+
 
 
     // För GET /books  Lista alla böcker utan paginering
@@ -50,19 +54,26 @@ public class BookService {
 
 
     // POST /books Skapa ny bok
+    @PreAuthorize("hasRole('ADMIN')")
     public Book createBook(Book book) {
         validateBook(book);
 
         Long authorId = book.getAuthor().getAuthorId();
 
+        // Sanitize book title (kontrollera null först)
+        if (book.getTitle() != null) {
+            book.setTitle(Jsoup.clean(book.getTitle(), Safelist.basic()));
+        }
+
+        // Hämta befintlig författare från databas
         Author existingAuthor = authorRepository.findById(authorId)
                 .orElseThrow(() -> new AuthorNotFoundException(authorId));
 
+        // Använd den befintliga författaren istället för att sanitiza den från request
         book.setAuthor(existingAuthor);
 
         return bookRepository.save(book);
     }
-
 
 
     // Sök metoder
@@ -118,8 +129,6 @@ public class BookService {
         return getAllBooks(pageable);
     }
 
-
-
     // METODER MED QUERY
 
     public List<Book> getBooksByAuthorId(Long authorId) {
@@ -137,6 +146,7 @@ public class BookService {
     }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Book> getLowStockBooks(Integer threshold) {
         if (threshold < 0) {
             throw new InvalidBookDataException("Threshold cannot be negative");
@@ -171,8 +181,6 @@ public class BookService {
         return findBookByTitle(title)
                 .orElseThrow(() -> new BookNotFoundException("Book with title '" + title + "' not found"));
     }
-
-
 
 
 

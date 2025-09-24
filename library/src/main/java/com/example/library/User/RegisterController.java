@@ -1,5 +1,6 @@
 package com.example.library.User;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,7 @@ public class RegisterController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> register(@RequestBody User user) {
+    public ResponseEntity<UserDto> register(@Valid @RequestBody User user) {
         try {
             User created = userService.createUser(user);
             UserDto dto = new UserDto(created);

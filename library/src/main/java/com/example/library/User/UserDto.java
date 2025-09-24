@@ -15,7 +15,7 @@ public class UserDto {
 
     public UserDto(User user) {
         this.id = user.getUserId();
-        this.name = user.getFirstName() + " " + user.getLastName(); // eller anpassa
+        this.name = user.getFirstName() + " " + user.getLastName();
         this.email = user.getEmail();
     }
 
