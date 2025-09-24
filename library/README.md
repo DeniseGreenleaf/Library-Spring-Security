@@ -124,3 +124,68 @@ Input sanitization: minskar XSS/payload i datafält.
 - Balans: väljer säkra defaults, men kan justera med adaptiv säkerhet t.ex. kräva 2FA bara för admin eller ovanliga inloggningar.
 
 ---
+
+# Postman requests:
+
+### Går att söka böcker på titel eller författare - öppen för alla
+![Get Books request](images/1.GETBooks.JPG)  
+
+### Se alla böcker - öppen för alla
+![Get Books2 request](images/2.GETBooks2.JPG)
+
+### Get allas lån 401 unauthorized - måste logga in
+![See Loan Ej Inloggad request](images/4.SeeLoanEjInloggad.JPG)  
+
+### skapa användare - öppen för alla
+![Create User request](images/postmanCreateUserJPG.JPG)  
+
+### Ogiltiga inloggningsuppgifter
+![Login Ogiltiga Uppgifter request](images/5.LoginOgilitigaUppgifter.JPG)  
+
+### Too many requests - kontot låses i 15 min efter 5 försök.
+![Too Many requests request](images/TooManyRequests.JPG)
+
+### Logga in som User - 200 ok
+![Login User request](images/6.PostmanLogin.JPG)  
+
+### Se egna lån som user - 200 ok
+![See my Loans as User request](images/7.PostmanSeeLoanAsUser.JPG)  
+
+### Se allas lån som user - obehörig - 403 forbidden 
+![See All Loans as USer request](images/7.UserForbiddenSeeAllLoans.JPG)  
+
+### Se alla lån som User -  
+Jag hade lite problem med att få rätt felkod, fick först 401 även som inloggad,  
+Löste det med exception handler i securityconfig
+![See all loans user fel http kod request](images/8.PostmanUserCannotSeeAllLoans.JPG)  
+
+### User kan inte se andra users uppgifter
+![User cannot see other users request](images/UserSeeUSerForbidden.JPG)  
+
+### Logout - 204 no content och token blacklistas
+![Logout request](images/10.PostmanLogoutSuccessful.JPG)
+
+### Admin kan se allas lån
+![Admin See all loans request](images/11.AdminSeeAllLoans.JPG)  
+
+### Admin kan se users uppgifter
+![Admin see users request](images/12.PostmanAdminSeeUsers.JPG)  
+
+### Admin kan skapa bok eller författare (users = obehörig)
+![Admin post book request](images/POSTBookSomAdmin.JPG)
+
+### Admin och user kan låna bok som inloggade
+![loan book request](images/PostmanLoanBookWithToken.JPG)
+
+### Säkra headers
+![säkra headers request](images/PostmanHSTSX-Frame-OptionsContentSecurityPolicy.JPG)  
+
+### Session 
+![session request](images/Sessiom.JPG)
+
+
+
+
+
+
+
